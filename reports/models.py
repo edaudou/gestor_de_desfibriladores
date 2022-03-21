@@ -40,7 +40,7 @@ class Patch(models.Model):
     id = models.AutoField(verbose_name='ID', primary_key=True)
     expiration_date =  models.DateTimeField(verbose_name='Fecha de expiración',)
 
-class Desfibrillator(models.Model):
+class Defibrillator(models.Model):
     id = models.AutoField(verbose_name='ID', primary_key=True)
     # Nombre del modelo
     model = models.CharField(verbose_name='Modelo', max_length=100,)
