@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 class Contact(models.Model):
     address = models.CharField(verbose_name='Dirección', max_length=255, null = True, blank=True)
     email = models.CharField(verbose_name='E-mail', max_length=100, null = True, blank=True)
+    phone = models.CharField(verbose_name='Teléfono', max_length=9)
     class Meta:
         abstract = True
 
