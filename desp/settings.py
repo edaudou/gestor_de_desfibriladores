@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'reports',
 
     # MODULES
+    "crispy_forms",
 ]
 
 MIDDLEWARE = [
@@ -60,7 +61,7 @@ ROOT_URLCONF = 'desp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -130,9 +131,23 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+GOOGLE_API_KEY = ""
+
+RECAPTCHA_KEY = ""
+
+RECAPTCHA_SECRET_KEY = ""
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# AUTH_USER_MODEL = "core.User"
+import mimetypes
+mimetypes.add_type("text/css", ".css", True)

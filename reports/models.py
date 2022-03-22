@@ -10,7 +10,7 @@ class Contact(models.Model):
 
 class Person(Contact):
     id = models.AutoField(primary_key=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null = True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(verbose_name='Nombre',max_length=100, null = True, blank=True)
     last_name = models.CharField(verbose_name='Apellidos',max_length=255, null = True, blank=True)
     nif = models.CharField(verbose_name='NIF', max_length=9,)
@@ -61,6 +61,6 @@ class Defibrillator(models.Model):
     check_date = models.DateTimeField(null = True, blank=True)
     professional = models.ManyToManyField(Professional, related_name="%(class)s", blank=True)
     #Para almacenar en postgis y luego representarlo en la api de google maps
-    # longitude  = ...
-    # latitude = ...
-
+    longitude = models.CharField(verbose_name="Longitud",max_length=50, null=True, blank=True)
+    latitude = models.CharField(verbose_name="Latitud",max_length=50, null=True, blank=True)
+    

@@ -1,6 +1,8 @@
 Python 3.9.10
 pip install django==3.2
 pip install psycopg2-binary==2.8.6 (versiones más actuales dan problemas por el formateo UTC)
+pip install requests
+pip install django_crisp_forms
 Instalación y configuración de tailwind
 cmd - npm install -D tailwindcss postcss  postcss postcss-cli autoprefixer
 cmd - npx tailwindcss init
