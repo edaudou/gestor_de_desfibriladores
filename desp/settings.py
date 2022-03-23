@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-from .secrets import DB_NAME, DB_USER, DB_PASSWORD, DJ_SECRET_KEY, HOSTS, DBUG
+from .secrets import DB_NAME, DB_USER, DB_PASSWORD, DJ_SECRET_KEY, HOSTS, DBUG,EMAIL_HOST_USER,  EMAIL_HOST_PASSWORD
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -76,6 +76,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'desp.wsgi.application'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+SERVER_EMAIL = EMAIL_HOST_USER
+ADMINS = [('ines', EMAIL_HOST_USER)]
+
+
+
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -132,12 +144,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-GOOGLE_API_KEY = ""
-
-RECAPTCHA_KEY = ""
-
-RECAPTCHA_SECRET_KEY = ""
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
@@ -151,3 +157,4 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # AUTH_USER_MODEL = "core.User"
 import mimetypes
 mimetypes.add_type("text/css", ".css", True)
+
