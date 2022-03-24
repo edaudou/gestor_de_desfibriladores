@@ -9,7 +9,7 @@ media
 
 # Backup files # 
 *.bak 
-
+Tareas.todo
 # If you are using PyCharm # 
 # User-specific stuff
 .idea/**/workspace.xml

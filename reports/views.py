@@ -1,38 +1,65 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate
-from .forms import SignUpForm, loginUserForm, CompanyForm
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
+
 from django.http import HttpResponse
 
+from django.shortcuts import render, redirect
+
+from django.template.loader import render_to_string
+
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.core.mail import EmailMessage
-from .tokens import account_activation_token
 from django.contrib.auth.models import User
-from django.contrib.auth import get_user_model
 from django.contrib import messages
 
+from django.core.mail import EmailMessage
+
+
+from .tokens import account_activation_token
 from .models import Client, Company
+from .forms import SignUpForm, loginUserForm, CompanyForm, ClientForm
 
 # Create your views here.
 
 def index(request):
     form = SignUpForm
     companyform = CompanyForm
+    clientform = ClientForm
 
     if request.method == 'POST':
         form = SignUpForm(request.POST)
-        cform = CompanyForm(request.POST)
-        if form.is_valid():
+        comform = CompanyForm(request.POST)
+        cliform = ClientForm(request.POST)
+
+        if form.is_valid() and comform.is_valid() and cliform.is_valid():
             form.first_name= form.cleaned_data.get('username')
             user = form.save(commit=False)
             user.is_active = False
+            user.username =  cliform.cleaned_data.get('first_name')
             user.save()
             current_site = get_current_site(request)
             mail_subject = 'Activate your account'
+            print(comform)
+            negocio = Company.objects.create(
+                cif = comform.cleaned_data.get('cif'),
+                phone = comform.cleaned_data.get('phone'),
+                email = comform.cleaned_data.get('email'),
+                address = comform.cleaned_data.get('address')
+            )
+            negocio.save()
+            cliente = Client.objects.create(
+                user = user,
+                company = negocio,
+                nif = cliform.cleaned_data.get('nif'),
+                phone =  cliform.cleaned_data.get('phone'),
+                email = cliform.cleaned_data.get('email'),
+                first_name = user.username,
+                last_name = cliform.cleaned_data.get('last_name'),
+                address = cliform.cleaned_data.get('address'),
+            )
+            cliente.save()
             message = render_to_string('reports/acc_active_email.html', {
                 'user': user,
                 'domain': current_site,
@@ -51,9 +78,11 @@ def index(request):
         form = SignUpForm()
     context = {
         'form': form,    
-        'companyform': companyform,   
+        'companyform': companyform,
+        'clientform': clientform,   
     }
     return render(request,'reports/index.html',context)
+
 
 def loginView(request):
     form = loginUserForm
@@ -82,8 +111,6 @@ def activate(request, uidb64, token):
     if user and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        #Once the user is created we create its client info
-
 
         auth_login(request, user)
         return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
