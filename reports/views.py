@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate
-from .forms import SignUpForm
+from .forms import SignUpForm, loginUserForm, CompanyForm
 from django.utils.encoding import force_bytes, force_text
 from django.http import HttpResponse
 
@@ -13,20 +13,24 @@ from django.core.mail import EmailMessage
 from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+from django.contrib import messages
 
+from .models import Client, Company
 
 # Create your views here.
 
 def index(request):
     form = SignUpForm
+    companyform = CompanyForm
 
     if request.method == 'POST':
         form = SignUpForm(request.POST)
+        cform = CompanyForm(request.POST)
         if form.is_valid():
             form.first_name= form.cleaned_data.get('username')
             user = form.save(commit=False)
             user.is_active = False
-            # user.save()
+            user.save()
             current_site = get_current_site(request)
             mail_subject = 'Activate your account'
             message = render_to_string('reports/acc_active_email.html', {
@@ -46,25 +50,42 @@ def index(request):
     else:
         form = SignUpForm()
     context = {
-        'form': form,       
+        'form': form,    
+        'companyform': companyform,   
     }
     return render(request,'reports/index.html',context)
 
+def loginView(request):
+    form = loginUserForm
+
+    if request.method == 'POST':
+        form = loginUserForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password1')
+
+            user = authenticate(request, email=email, password1= password)
+            if user is not None:
+                auth_login(request, user)
+                return redirect('reports:list')
+            else:
+                messages.info(request,'Usuario o contraseña incorrectos')
+    template = 'reports/login.html'
+    context = {'form':form,}
+    return render(request, template, context)
+
 def activate(request, uidb64, token):
-    try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
+    uid = force_text(urlsafe_base64_decode(uidb64))
 
-        user = User.objects.get(pk=uid)
-
-    except Exception as e:
-        user = None
+    user = User.objects.get(pk=uid)
 
     if user and account_activation_token.check_token(user, token):
+        user.is_active = True
         user.save()
+        #Once the user is created we create its client info
 
 
         auth_login(request, user)
-        # return redirect('home')
         return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
     else:
         return HttpResponse('Activation link is invalid!')

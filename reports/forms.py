@@ -15,5 +15,16 @@ class SignUpForm(UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2', )
 
 class CompanyForm(forms.Form):
+    cif = forms.CharField(max_length=9, required=True, label="CIF")
+
     class Meta:
         model = Company
+        fields = ('cif')
+
+class loginUserForm(forms.Form):
+    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.', label = "Correo electrónico")
+    password1 = forms.CharField(widget=forms.PasswordInput(), label ="Contraseña")
+
+    class Meta:
+        model = User
+        fields = ('email', 'password1')   

@@ -8,5 +8,6 @@ urlpatterns = [
     path('detail/<int:defibrilator_id>/', defibrillatorDetail, name='defibrillator_detail'),
     path('list/', defibrillatorList, name='defibrillator_list'),
     path('profile/<int:user_id>/', profile, name='profile'),
-    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,40})/$', activate, name='activate'),
+    path('activate/<uidb64>/<token>',activate, name='activate'),
+    path('login/',loginView, name='login'),
 ]
