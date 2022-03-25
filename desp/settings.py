@@ -29,8 +29,7 @@ DEBUG = DBUG
 
 ALLOWED_HOSTS = [HOSTS]
 
-
-# Application definition
+    # Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -55,7 +54,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+    
 ROOT_URLCONF = 'desp.urls'
 
 TEMPLATES = [

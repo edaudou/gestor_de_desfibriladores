@@ -10,4 +10,6 @@ urlpatterns = [
     path('profile/<int:user_id>/', profile, name='profile'),
     path('activate/<uidb64>/<token>',activate, name='activate'),
     path('login/',loginView, name='login'),
+    path('logout/',logoutView, name='logout'),
+
 ]

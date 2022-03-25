@@ -1,12 +1,9 @@
 {% autoescape off %}
 
+Hola {{user.first_name}},
 
-Hi {{user.username}}
-
-Please use the link below to verify your account.
-
+Por favor, utiliza el siguiente enlace para confirmar tu cuenta.
 
 http://{{domain}}{% url 'reports:activate' uidb64=uid token=token %}
-
 
 {% endautoescape %}

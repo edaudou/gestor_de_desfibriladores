@@ -1,3 +1,4 @@
+from re import template
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 
@@ -7,15 +8,15 @@ from django.shortcuts import render, redirect
 
 from django.template.loader import render_to_string
 
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
-from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth import authenticate, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.decorators import login_required
+from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages
 
 from django.core.mail import EmailMessage
-
 
 from .tokens import account_activation_token
 from .models import Client, Company
@@ -34,19 +35,21 @@ def index(request):
         cliform = ClientForm(request.POST)
 
         if form.is_valid() and comform.is_valid() and cliform.is_valid():
-            form.first_name= form.cleaned_data.get('username')
             user = form.save(commit=False)
+            user.username =  form.cleaned_data.get('email')
+            user.first_name = cliform.cleaned_data.get('first_name').capitalize()
+            print("****",user)
             user.is_active = False
-            user.username =  cliform.cleaned_data.get('first_name')
             user.save()
+            
             current_site = get_current_site(request)
             mail_subject = 'Activate your account'
             print(comform)
             negocio = Company.objects.create(
                 cif = comform.cleaned_data.get('cif'),
-                phone = comform.cleaned_data.get('phone'),
-                email = comform.cleaned_data.get('email'),
-                address = comform.cleaned_data.get('address')
+                phone = comform.cleaned_data.get('company_phone'),
+                email = comform.cleaned_data.get('company_email'),
+                address = comform.cleaned_data.get('company_address')
             )
             negocio.save()
             cliente = Client.objects.create(
@@ -54,9 +57,9 @@ def index(request):
                 company = negocio,
                 nif = cliform.cleaned_data.get('nif'),
                 phone =  cliform.cleaned_data.get('phone'),
-                email = cliform.cleaned_data.get('email'),
-                first_name = user.username,
-                last_name = cliform.cleaned_data.get('last_name'),
+                email = form.cleaned_data.get('email'),
+                first_name = user.first_name,
+                last_name = cliform.cleaned_data.get('last_name').capitalize(),
                 address = cliform.cleaned_data.get('address'),
             )
             cliente.save()
@@ -83,24 +86,56 @@ def index(request):
     }
     return render(request,'reports/index.html',context)
 
+def logoutView(request):
+    logout(request)
+    return redirect('reports:index')
+
+class LoginUser(LoginView):
+    template_name = 'reports/login.html'
+
+    def dispatch(self, request, *args, **kwargs):  
+        if request.user.is_authenticated:
+            return redirect( 'reports:defibrillator_list' )
+
+        user=authenticate(email=request.POST.get('email'),password1=request.POST.get('password1'))
+        print(request.POST.get('email'))
+        print(request.POST.get('password1'))
+        if user is  None:            
+            messages.info(request,'El usuario o contraseña es incorrecto')        
+
+        return super().dispatch(request, *args, **kwargs)     
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = loginUserForm
+        return context
+
 
 def loginView(request):
     form = loginUserForm
-
+    template = 'reports/login.html'
+    context = {'form':form,}
     if request.method == 'POST':
         form = loginUserForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password1')
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            print("\n VÁLIDO")
 
-            user = authenticate(request, email=email, password1= password)
+            user = authenticate(username=username, password= password)
+            print(password)
             if user is not None:
+                print("\n Todo gucci")
+                            
                 auth_login(request, user)
-                return redirect('reports:list')
+                return redirect('reports:defibrillator_list')
             else:
+                print("\n Usuario incorrecto")
+
                 messages.info(request,'Usuario o contraseña incorrectos')
-    template = 'reports/login.html'
-    context = {'form':form,}
+                return redirect('reports:login')
+
+ 
     return render(request, template, context)
 
 def activate(request, uidb64, token):
@@ -113,9 +148,9 @@ def activate(request, uidb64, token):
         user.save()
 
         auth_login(request, user)
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+        return HttpResponse('Gracias por confirmar el correo. Le hemos iniciado sesión.')
     else:
-        return HttpResponse('Activation link is invalid!')
+        return HttpResponse('El link de activación es inválido')
 
 @login_required(login_url='index')
 def profile(request):

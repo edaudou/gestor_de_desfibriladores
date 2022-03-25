@@ -17,9 +17,15 @@
 <body>
     <div>
     {% if request.user.is_authenticated %}
-    <p> Saluditos {{request.user}}</p>
+    <p> Saluditos {{ request.user.first_name }}</p>
+
+    <a href="{% url 'reports:logout' %}">
+      Cerrar sesi&oacute;n
+    </a> 
     {% endif %}
     </div>
+
+    
 
     {% block container %}
     {% endblock %}
