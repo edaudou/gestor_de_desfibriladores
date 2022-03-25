@@ -36,11 +36,17 @@ def index(request):
 
         if form.is_valid() and comform.is_valid() and cliform.is_valid():
             user = form.save(commit=False)
+            
             user.username =  form.cleaned_data.get('email')
+            
             user.first_name = cliform.cleaned_data.get('first_name').capitalize()
             print("****",user)
             user.is_active = False
-            user.save()
+            try:
+                user.save()
+            except:
+                print("usuario ya existe")
+                return HttpResponse("El usuario ya existe")
             
             current_site = get_current_site(request)
             mail_subject = 'Activate your account'
