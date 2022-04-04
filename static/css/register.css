@@ -1,3 +1,13 @@
+/* Copyright (c) 2022 by Atakan Goktepe (https://codepen.io/atakan/pen/nPOZZR)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+
+
+
 /*custom font*/
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
 
@@ -9,21 +19,23 @@ html {
 	/*Image only BG fallback*/
 	
 	/*background = gradient + image pattern combo*/
-	background: 
-		linear-gradient(rgba(196, 102, 0, 0.6), rgba(155, 89, 182, 0.6));
+	background-color: #ccc;
 }
 
-body {
+body , .typebutton{
+    
 	font-family: montserrat, arial, verdana;
 }
 /*form styles*/
-#clientForm {
+.defaultForm {
 	width: 400px;
 	margin: 50px auto;
 	text-align: center;
 	position: relative;
 }
-#clientForm fieldset {
+
+  
+.defaultForm fieldset {
 	background: white;
 	border: 0 none;
 	border-radius: 3px;
@@ -37,11 +49,11 @@ body {
 	position: relative;
 }
 /*Hide all except first fieldset*/
-#clientForm fieldset:not(:first-of-type) {
+.defaultForm fieldset:not(:first-of-type) {
 	display: none;
 }
 /*inputs*/
-#clientForm input, #clientForm textarea {
+.defaultForm input, .defaultForm textarea, .defaultForm select {
 	padding: 15px;
 	border: 1px solid #ccc;
 	border-radius: 3px;
@@ -52,8 +64,12 @@ body {
 	color: #2C3E50;
 	font-size: 13px;
 }
+
+.defaultForm input:required{
+    border: 3px solid rgb(163, 163, 163);
+}
 /*buttons*/
-#clientForm .action-button {
+.defaultForm .action-button, .typebutton{
 	width: 100px;
 	background: #27AE60;
 	font-weight: bold;
@@ -64,7 +80,7 @@ body {
 	padding: 10px 5px;
 	margin: 10px 5px;
 }
-#clientForm .action-button:hover, #clientForm .action-button:focus {
+.defaultForm .action-button:hover, .defaultForm .action-button:focus {
 	box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
 }
 /*headings*/
@@ -89,10 +105,10 @@ body {
 }
 #progressbar li {
 	list-style-type: none;
-	color: white;
+	color: rgb(6, 36, 18);
 	text-transform: uppercase;
-	font-size: 9px;
-	width: 33.33%;
+	font-size: 0.8em;
+	width: 50%;
 	float: left;
 	position: relative;
 }
@@ -132,3 +148,24 @@ body {
 
 
 
+/* ********************************************** */
+/* .container {
+    display: flex;
+    height: 100vh;
+  }
+   
+
+  
+  .right {
+    flex: 1;
+    background-color: black;
+    transition: 1s;
+    background-image: url(https://www.google.com/url?sa=i&url=https%3A%2F%2Fpixabay.com%2Fes%2Fphotos%2Fdesfibrilador-primeros-auxilios-5300520%2F&psig=AOvVaw1lcVM5UTBy9cT5aZ3cmhcA&ust=1648806316543000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCODkx6iI8PYCFQAAAAAdAAAAABAL);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  } */
+ 
+
+
+/* ********************************************** */

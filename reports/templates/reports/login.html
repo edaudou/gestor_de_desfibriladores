@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,14 +6,43 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link  type="text/css" href="{% static 'css/login.css' %}" rel="stylesheet" >
+
 </head>
 <body>
-    <h2>Inciar sesión</h2>
+
+  <div class="container">
+    <div class="left">
+      <div class="header">
+        <h2 class="animation a1">Inicio de sesión</h2>
+      </div>
+      <div class="form">
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+
+              {{ field }}
+              {% for error in field.errors %}
+                
+              {% endfor %}
+         
+          {% endfor %}
+          
+          <p class="animation a5"><a href="/accounts/password_reset/">He olvidado mi contraseña</a></p>
+          <p class="animation a6"><a href="/">No tengo una cuenta</a></p>
+          <button type = "submit" class="animation a7">Inciar sesión</button>
+        </form>      
+      </div>
+    </div>
+    <div class="right"></div>
+  </div>
+  
+    <!-- <h2>Inciar sesión</h2>
     <form method="post">
       {% csrf_token %}
       {% for field in form %}
         <p>
-          {{ field.label_tag }}<br>
+          {{ field.label_tag }}<br> a3"
           {{ field }}
           {% for error in field.errors %}
             <p style="color: red">{{ error }}</p>
@@ -20,6 +50,7 @@
         </p>
       {% endfor %}
       <button type="submit">Inciar sesión</button>
-    </form>
+      <a href="/accounts/password_reset/">Recuperar contraseña</a>
+    </form> -->
 </body>
 </html>

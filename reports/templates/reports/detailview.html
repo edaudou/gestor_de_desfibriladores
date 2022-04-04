@@ -1,0 +1,38 @@
+{% extends 'home.html' %}
+{% load crispy_forms_tags %}
+{% block xd %}
+   
+        <div >
+            <br>Estoy en detailview.html.
+        </div>
+        <div>
+                <p> Modelo: <p contenteditable="true" style=" width: fit-content;" id="modifyDetail">{{detail.model}}</p> </p>
+                <p> Marca: <p contenteditable="true"> {{detail.brand}}</p></p>
+                <p> Ubicación: {{detail.location}} </p>
+                <p> Fecha de instalación: {{detail.installation_date}} </p>
+                <p> Fecha expiración de las baterías: {{detail.battery_expiration_date}} </p>
+                <p> Fecha expiración de los parches:  {% for p in patchs %} <div>{{p.expiration_date}} </div>{% endfor %}</p>
+                <p> Fecha de revisión: {{detail.check_date}} </p>
+                <p> Profesional(es) a cargo: {{detail.professional}} </p>
+        </div>
+      <button type="button" onclick="modifyDetails()">Modificar</button>
+      <script>
+          function modifyDetails(){
+            //obtener mediante js los values para mandarlos de nuevo y sobreescribir con cada cambio
+          }
+      </script>
+    
+
+    <form method="post">
+      {% csrf_token %}
+      <h3> Datos desfibrilador {{detail.id}} </h3>
+      {% for field in form %}
+      {{ field.label_tag }}
+      {{ field }}
+      <br>
+      {% endfor %}
+      <button type="submit">Modificar</button>
+    </form>
+
+
+{% endblock %}   
