@@ -1,7 +1,6 @@
 {% extends 'home.html' %}
 {% load crispy_forms_tags %}
 
-
 {% block container %}
   <div>
     {% if  request.user.is_anonymous %}
@@ -34,7 +33,7 @@
           <button type="button" class="typebutton" onclick="openRegisterForm('proForm')">Profesional</button>
         </div>
       
-        <form method="post" id="clientForm"   class="defaultForm">
+        <form method="post" id="clientForm" style="display: none;"  class="defaultForm">
           <!-- progressbar -->
           <ul id="progressbar">
             <li class="active">Datos de la compañia</li>
@@ -43,7 +42,7 @@
           <!-- fieldsets -->
         {% csrf_token %}
         <fieldset>
-          <h2 class="fs-title">Registra tu cuenta</h2>
+          <h2 class="fs-title">Datos compañía</h2>
         {% for field in companyform %}
           <p>
             {{ field }}
@@ -52,10 +51,10 @@
             {% endfor %}
           </p>
         {% endfor %}
-        <input type="button" name="next" class="next action-button" value="Siguiente" />
+        <input type="button" name="next" id="next" class="next action-button" value="Siguiente" />
       </fieldset>
       <fieldset>
-        <h2 class="fs-title">Datos de usuario</h2>
+        <h2 class="fs-title">Datos usuario</h2>
           {% for field in clientform %}
             <p>
               {{ field }}
@@ -74,16 +73,16 @@
           {% endfor %}
           <input type="button" name="previous" class="previous action-button" value="Anterior" />
 
-        <button type="submit" action="" class="action-button">Registrarse</button>
+        <button type="submit" action="" onsubmit = "validacion();"class="validate action-button">Registrarse</button>
         </fieldset>
       </form>
 
 
       <div class="container">
-        <form method="post"id="proForm" class="defaultForm" style="display: none;">
+        <form method="post"id="proForm" class="defaultForm" >
           {% csrf_token %}
           <fieldset>
-            <h2> Datos de usuario técnico</h2>
+            <h2> Datos usuario técnico</h2>
               {% for field in proform %}
                 <p>
                   {{ field }}
@@ -108,112 +107,4 @@
     <!-- <p style =" color: red;">  * (Campos obligatorios)</p> -->
 
 
-  <script>
-  
-//jQuery time
-var current_fs, next_fs, previous_fs; //fieldsets
-var left, opacity, scale; //fieldset properties which we will animate
-var animating; //flag to prevent quick multi-click glitches
-
-$(".next").click(function(){
-  let cif = document.getElementById("id_cif");
-  let c_phone = document.getElementById("id_company_phone");
-  if ((cif.value.length==9) && (c_phone.value.length==9)){
-   
-    cif.style.borderColor  ="#ccc";
-    c_phone.style.borderColor  ="#ccc";
-    if(animating) return false;
-    animating = true;
-    
-    current_fs = $(this).parent();
-    next_fs = $(this).parent().next();
-    
-    //activate next step on progressbar using the index of next_fs
-    $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
-    
-    //show the next fieldset
-    next_fs.show(); 
-    //hide the current fieldset with style
-    current_fs.animate({opacity: 0}, {
-      step: function(now, mx) {
-        //as the opacity of current_fs reduces to 0 - stored in "now"
-        //1. scale current_fs down to 80%
-        scale = 1 - (1 - now) * 0.2;
-        //2. bring next_fs from the right(50%)
-        left = (now * 50)+"%";
-        //3. increase opacity of next_fs to 1 as it moves in
-        opacity = 1 - now;
-        current_fs.css({
-          'transform': 'scale('+scale+')',
-          'position': 'absolute'
-        });
-        next_fs.css({'left': left, 'opacity': opacity});
-      }, 
-      duration: 800, 
-      complete: function(){
-        current_fs.hide();
-        animating = false;
-      }, 
-      //this comes from the custom easing plugin
-      easing: 'easeInOutBack'
-    });
-  }
-  if(cif.value.length !=9 ){
-    console.log("CIF "+ cif.value.length)
-    cif.style.borderColor  ="red";
-
-  }else{
-    cif.style.borderColor  ="#ccc";
-  }
-  if(c_phone.value.length !=9){
-
-    c_phone.style.borderColor  ="red";
-    console.log("COMPANY "+ c_phone.value.length)
-
-  }else{
-    c_phone.style.borderColor  ="#ccc";
-  }
-	
-});
-
-$(".previous").click(function(){
-	if(animating) return false;
-	animating = true;
-	
-	current_fs = $(this).parent();
-	previous_fs = $(this).parent().prev();
-	
-	//de-activate current step on progressbar
-	$("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
-	
-	//show the previous fieldset
-	previous_fs.show(); 
-	//hide the current fieldset with style
-	current_fs.animate({opacity: 0}, {
-		step: function(now, mx) {
-			//as the opacity of current_fs reduces to 0 - stored in "now"
-			//1. scale previous_fs from 80% to 100%
-			scale = 0.8 + (1 - now) * 0.2;
-			//2. take current_fs to the right(50%) - from 0%
-			left = ((1-now) * 50)+"%";
-			//3. increase opacity of previous_fs to 1 as it moves in
-			opacity = 1 - now;
-			current_fs.css({'left': left});
-			previous_fs.css({'transform': 'scale('+scale+')', 'opacity': opacity});
-		}, 
-		duration: 800, 
-		complete: function(){
-			current_fs.hide();
-			animating = false;
-		}, 
-		//this comes from the custom easing plugin
-		easing: 'easeInOutBack'
-	});
-});
-
-$(".submit").click(function(){
-	return false;
-})
-
-  </script>
 {% endblock %}    

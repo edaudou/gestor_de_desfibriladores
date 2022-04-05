@@ -2,6 +2,7 @@ from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from django_currentuser.middleware import get_current_authenticated_user
 
 
 
@@ -46,9 +47,10 @@ class Professional(Person):
 class Client(Person):
     id = models.AutoField(verbose_name='ID', primary_key=True)
     company = models.OneToOneField(Company, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, related_name="pro_creator", on_delete= models.PROTECT,null = True)
     
     def save(self, *args, **kwargs):
-        self.product_type = 'Person'
+        self.product_type = 'Person'       
         return super(Person, self).save(*args, **kwargs)
     def __str__(self):
         return f"{self.email}"

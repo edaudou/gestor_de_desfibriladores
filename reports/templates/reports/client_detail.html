@@ -1,0 +1,11 @@
+{% extends 'home.html' %}
+{% load crispy_forms_tags %}
+{% block xd %}
+<p> Aqui van los detalles </p>
+    {{detail.first_name}}
+    {{detail.last_name}}
+    {{detail.nif}}
+    {{detail.cif}}
+
+
+{% endblock %}   

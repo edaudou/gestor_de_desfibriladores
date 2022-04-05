@@ -14,29 +14,39 @@
 
 
 
-{% for d in defibrillatorList %}
-    <a href = "{% url 'reports:defibrillator_detail' d.id %}" style=" display: flex; border: 1px solid black;width: fit-content;"> 
-        <div>
-            <img style="border: 1px solid black;width: 2em; height: 2em;" src="https://ilabora.com/wp-content/uploads/2017/12/desfibriladores-asturias.png">
-        </div>
+{% for c in clients %}
+
+    <a href = "{% url 'reports:client_detail' c.id %}" style=" display: flex; border: 1px solid black;width: fit-content;"> 
+        
         
         <div style="border: 1px solid black; width: fit-content;">
-                Modelo: {{d.model}}
-                Ubicación: {{d.location}}
-            </div>
+            Email: {{c.email}}
+            NIF: {{c.nif}}
+            Nombre: {{c.first_name}}
+        </div>
     </a>
 {% endfor %}
-<button id="myBtn">Open Modal</button>
+
 
 
     <!-- Modal content -->
  
-    <form method="post"id="myModal" class="modal defaultForm">
+    <form method="post" class=" defaultForm">
         {% csrf_token %}
-        <fieldset class="modal-content">
+        <fieldset>
+            <h2 class="fs-title">Datos compañía</h2>
+          {% for field in companyform %}
+            <p>
+              {{ field }}
+              {% for error in field.errors %}
+                <p style="color: red">{{ error }}</p>
+              {% endfor %}
+            </p>
+          {% endfor %}
+        
                 <span class="close">&times;</span>
-                <h3> Datos desfibrilador {{detail.id}} </h3>
-                {% for field in form %}
+                <h3> Datos cliente  </h3>
+                {% for field in cliform %}
                 {{ field.label_tag }}
                 {{ field }}
                 <br>

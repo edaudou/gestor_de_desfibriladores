@@ -224,13 +224,64 @@ def activate(request, uidb64, token):
 def profile(request):
     return render(request,'reports/profile.html',{})
 
+import uuid
+from .secrets import DEFAULT_PASS
 @login_required(login_url='/')
 def clientList(request):
     pro = Professional.objects.get(user=request.user)
-    clientes = pro.defibrillator.all().values_list('client', flat=True).distinct()
-    print(clientes)
-    context= {}
+    clients = Client.objects.filter(created_by= request.user)
+    companyform = CompanyForm
+    cliform = ClientForm
+    if request.method =="POST":
+        cliform = ClientForm(request.POST)
+        companyform = CompanyForm(request.POST)
+        if cliform.is_valid() and companyform.is_valid():
+            negocio = Company.objects.create(
+                cif = companyform.cleaned_data.get('cif'),
+                phone = companyform.cleaned_data.get('company_phone'),
+                email = companyform.cleaned_data.get('company_email'),
+                address = companyform.cleaned_data.get('company_address')
+            )
+            uuid_user = uuid.uuid4()
+            negocio.save()
+            default_user = User.objects.create(
+                username=f"default-{uuid_user}",
+                password = DEFAULT_PASS,
+            )
+            default_user.save() 
+            cliente = Client.objects.create(
+                user = default_user,
+                company = negocio,
+                nif = cliform.cleaned_data.get('nif'),
+                phone =  cliform.cleaned_data.get('phone'),
+                email = cliform.cleaned_data.get('email'),
+                first_name =  cliform.cleaned_data.get('first_name'),
+                last_name =  cliform.cleaned_data.get('last_name'),
+                address = cliform.cleaned_data.get('address'),
+                created_by = request.user,
+            )
+            cliente.save()
+
+
+    # print(clientes)
+    print("{clientes}")
+    context= {
+        "cliform" : cliform,
+        "clients": clients,
+        "companyform":companyform,
+    }
     return render(request,'reports/clients.html',context)
+
+@login_required(login_url='/')
+def clientDetail(request,client_id):
+    c = Client.objects.get(pk=client_id)
+    form = ClientForm
+    context={
+        "detail": c,
+        "form": form,
+    }
+    return render(request,'reports/client_detail.html',context)
+
 @login_required(login_url='/')
 def defibrillatorList(request):
     form = DefibrillatorForm
@@ -270,7 +321,7 @@ def defibrillatorList(request):
         "form" : form,
         'person' :person,
     }
-    return render(request,'reports/listview.html',context)
+    return render(request,'reports/defibrillator_list.html',context)
 
 @login_required(login_url='/')
 def defibrillatorDetail(request,defibrillator_id):
@@ -282,7 +333,7 @@ def defibrillatorDetail(request,defibrillator_id):
         'patchs': patchs,
         "form": form,
     }
-    return render(request,'reports/detailview.html',context)
+    return render(request,'reports/defibrillator_detail.html',context)
 
 def error_404(request, exception):
     return render(request, '404.html')

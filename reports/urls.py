@@ -5,7 +5,8 @@ from .views import *
 app_name= 'reports'
 urlpatterns = [
     path('', index, name='index'),
-    path('detail/<int:defibrillator_id>/', defibrillatorDetail, name='defibrillator_detail'),
+    path('desfibrilador/<int:defibrillator_id>/', defibrillatorDetail, name='defibrillator_detail'),
+    path('cliente/<int:client_id>/', clientDetail, name='client_detail'),
     path('desfibriladores/', defibrillatorList, name='defibrillator_list'),
     path('clientes/', clientList, name='client_list'),
     path('profile/<int:user_id>/', profile, name='profile'),

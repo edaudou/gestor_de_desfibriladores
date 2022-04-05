@@ -20,25 +20,28 @@
     </style>
 </head>
 <body>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
-    
-    <div style="background-color: antiquewhite; top:0px;">
+  <div style="background-color: antiquewhite; top:0px;">
     {% if request.user.is_authenticated %}
     <p> Hola de nuevo {{ request.user.first_name }}</p>
-
+    
     <a href="{% url 'reports:logout' %}">
       Cerrar sesi&oacute;n
     </a> 
     {% endif %}
-    </div>
+  </div>
+  
+  
+  
+  {% block container %}
+  {% endblock %}
+  {% block xd %}
+  {% endblock %}
+  
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+      
+    <script src="{% static '/js/main.js' %}"    ></script>
 
-    
-
-    {% block container %}
-    {% endblock %}
-    {% block xd %}
-    {% endblock %}
 
 </body>
 </html
