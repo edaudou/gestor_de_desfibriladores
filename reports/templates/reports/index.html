@@ -51,7 +51,20 @@
             {% endfor %}
           </p>
         {% endfor %}
-        <input type="button" name="next" id="next" class="next action-button" value="Siguiente" />
+        <input type="button" name="next" id="next" class="next action-button" value="Siguiente"  />
+        {% comment %} <script>
+          function compruebanext(ev){
+          var phone = document.getElementById("id_phone")
+          patternphone=/^[679]{1}[0-9]{8}$/;
+          if(patternphone.test(phone)){
+            console.log("correcto");
+          }else{  
+            ev.preventDefault();
+            console.log("falso");
+          }
+          
+          }
+        </script> {% endcomment %}
       </fieldset>
       <fieldset>
         <h2 class="fs-title">Datos usuario</h2>
@@ -73,7 +86,7 @@
           {% endfor %}
           <input type="button" name="previous" class="previous action-button" value="Anterior" />
 
-        <button type="submit" action="" onsubmit = "validacion();"class="validate action-button">Registrarse</button>
+        <button type="submit" action="" id="submit" onsubmit = "validacion();"class="validate action-button">Registrarse</button>
         </fieldset>
       </form>
 
@@ -99,7 +112,7 @@
                   {% endfor %}
                 </p>
               {% endfor %}
-            <button type="submit" action="" class="action-button">Registrarse</button>
+            <button type="submit" action="" class="action-button submit">Registrarse</button>
           </fieldset>
         </form>
       </div>
